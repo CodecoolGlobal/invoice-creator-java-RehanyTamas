@@ -1,6 +1,7 @@
 package com.codecool.invoicecreator.view;
 
 
+import com.codecool.invoicecreator.database.Database;
 import com.codecool.invoicecreator.service.ProductService;
 import com.codecool.invoicecreator.service.CustomerService;
 
@@ -9,11 +10,13 @@ import java.util.*;
 public class InvoiceUI {
     private final ProductService productService;
     private final CustomerService customerService;
+    private final Database database;
     private final Scanner scanner;
 
-    public InvoiceUI(ProductService productService, CustomerService customerService, Scanner scanner) {
+    public InvoiceUI(ProductService productService, CustomerService customerService, Database database, Scanner scanner) {
         this.productService = productService;
         this.customerService = customerService;
+        this.database = database;
         this.scanner = scanner;
     }
 
@@ -33,7 +36,8 @@ public class InvoiceUI {
         System.out.println("\nOptions: ");
         System.out.println("1. Register new customer.");
         System.out.println("2. Create an invoice for a customer.");
-        System.out.println("3. Exit.");
+        System.out.println("3. List categories.");
+        System.out.println("4. Exit.");
     }
 
     private void handleChoice() {
@@ -45,6 +49,8 @@ public class InvoiceUI {
             case 3 -> System.exit(0);
         }
     }
+
+
 
     private void addNewCustomer() {
         System.out.println("\n*** Register new customer ***");

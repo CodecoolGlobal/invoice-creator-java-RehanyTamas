@@ -24,11 +24,11 @@ public class App {
         TableInitializer tableInitializer = new TableInitializer(database, tables);
         tableInitializer.initialize();
 
-        ProductService productService = new ProductService();
+        ProductService productService = new ProductService(database);
         CustomerService customerService = new CustomerService();
 
         Scanner scanner = new Scanner(System.in);
-        InvoiceUI invoiceUI = new InvoiceUI(productService, customerService, scanner);
+        InvoiceUI invoiceUI = new InvoiceUI(productService, customerService,database, scanner);
         invoiceUI.run();
     }
 }
