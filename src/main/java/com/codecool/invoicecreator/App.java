@@ -25,7 +25,7 @@ public class App {
         tableInitializer.initialize();
 
         ProductService productService = new ProductService(database);
-        CustomerService customerService = new CustomerService();
+        CustomerService customerService = new CustomerService(database);
 
         Scanner scanner = new Scanner(System.in);
         InvoiceUI invoiceUI = new InvoiceUI(productService, customerService,database, scanner);

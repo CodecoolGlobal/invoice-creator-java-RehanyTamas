@@ -1,6 +1,7 @@
 package com.codecool.invoicecreator.view;
 
 
+import com.codecool.invoicecreator.data.Customer;
 import com.codecool.invoicecreator.database.Database;
 import com.codecool.invoicecreator.service.ProductService;
 import com.codecool.invoicecreator.service.CustomerService;
@@ -56,6 +57,8 @@ public class InvoiceUI {
         System.out.println("\n*** Register new customer ***");
         System.out.print("Username: ");
         String name = scanner.next();
+        System.out.print("Id: ");
+        String id = scanner.next();
         System.out.print("email: ");
         String email = scanner.next();
         System.out.print("address: ");
@@ -63,7 +66,8 @@ public class InvoiceUI {
         System.out.print("tax number: ");
         String taxNumber = scanner.next();
         // Complete save() method
-        customerService.save(name, email, address, taxNumber);
+        customerService.save(new Customer(Integer.parseInt(id),name, email, address,Integer.parseInt(taxNumber))
+                );
         System.out.println("New customer saved.");
     }
 
