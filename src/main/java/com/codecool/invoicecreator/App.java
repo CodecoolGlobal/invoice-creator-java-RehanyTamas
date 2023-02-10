@@ -15,7 +15,7 @@ public class App {
         Database database = new Database(
                 "jdbc:postgresql://localhost:5432/invoice",
                 "postgres",
-                "postgres");
+                "kingt");
         Map<String, String> tables = Map.of(
                 "category", TableStatements.CATEGORY,
                 "customer", TableStatements.CUSTOMER,
