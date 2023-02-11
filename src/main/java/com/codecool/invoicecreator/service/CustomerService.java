@@ -3,10 +3,7 @@ package com.codecool.invoicecreator.service;
 import com.codecool.invoicecreator.data.Customer;
 import com.codecool.invoicecreator.database.Database;
 
-import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.SQLException;
+import java.sql.*;
 import java.util.Optional;
 
 public class CustomerService {
@@ -24,6 +21,25 @@ public class CustomerService {
              PreparedStatement statement = connection.prepareStatement(template)) {
             statement.setString(1,name);
 
+            ResultSet resultSet = statement.executeQuery();
+            Optional<Customer> customer = Optional.empty();
+            if (resultSet.next()) {
+                customer = Optional.of(toEntity(resultSet));
+            }
+            resultSet.close();
+            return customer;
+        } catch (SQLException e) {
+            System.err.println(e);
+            return Optional.empty();
+        }
+    }
+
+    public Optional<Customer> findOneByEmail(String email) {
+        // Write the select statements here!
+        String template = "SELECT * FROM customer WHERE email = ?";
+        try (Connection connection = database.getConnection();
+             PreparedStatement statement = connection.prepareStatement(template)) {
+            statement.setString(1,email);
             ResultSet resultSet = statement.executeQuery();
             Optional<Customer> customer = Optional.empty();
             if (resultSet.next()) {
@@ -63,6 +79,19 @@ public class CustomerService {
         }
 
         catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    public void findAll() {
+        String template = "SELECT name,email  FROM customer";
+        try (Connection connection = database.getConnection();
+             Statement statement = connection.createStatement();
+             ResultSet resultSet = statement.executeQuery(template)) {
+            while (resultSet.next()) {
+                System.out.println(resultSet.getString("email"));
+            }
+        } catch (SQLException e) {
             throw new RuntimeException(e);
         }
     }

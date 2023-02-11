@@ -2,10 +2,13 @@ package com.codecool.invoicecreator.view;
 
 
 import com.codecool.invoicecreator.data.Customer;
+import com.codecool.invoicecreator.data.Invoice;
+import com.codecool.invoicecreator.data.Product;
 import com.codecool.invoicecreator.database.Database;
 import com.codecool.invoicecreator.service.ProductService;
 import com.codecool.invoicecreator.service.CustomerService;
 
+import java.time.LocalDate;
 import java.util.*;
 
 public class InvoiceUI {
@@ -51,8 +54,6 @@ public class InvoiceUI {
         }
     }
 
-
-
     private void addNewCustomer() {
         System.out.println("\n*** Register new customer ***");
         System.out.print("Username: ");
@@ -73,9 +74,74 @@ public class InvoiceUI {
 
     private void createInvoice() {
         System.out.println("\n*** Select a customer by him/her email address ***");
-        // Print the available customers to the console and select one.
+        Customer customer = getCostumer();
 
-        System.out.println("\n*** Select items from the stock or press 's' to generate the invoice ***");
-        // Print the available products to the console, select some, and generate invoice
+        System.out.println("\n*** Select items from the stock or type 's' to generate the invoice ***");
+        List<Product> products = getProducts();
+
+        Invoice invoice = new Invoice(LocalDate.now(),customer,products);
+        displayInvoice(invoice);
+    }
+
+    public Customer getCostumer(){
+
+        Optional<Customer> customer = Optional.empty();
+
+        while (customer.isEmpty()){
+            customerService.findAll();
+            System.out.print("\nSelect a customer\n");
+            String email = scanner.next();
+            customer = customerService.findOneByEmail(email);
+        }
+
+        return customer.get();
+    }
+
+    public List<Product> getProducts(){
+        boolean end = false;
+
+        List<Product> output = new ArrayList<>();
+
+        while(!end){
+            productService.findAllByCategories();
+            System.out.println("\nSelect Product\n");
+            String name = scanner.next();
+            if(name.toLowerCase().equals("s")){
+                end = true;
+            }else{
+                Optional<Product> product = productService.findOneByName(name);
+                product.ifPresent(output::add);
+            }
+        }
+
+        return output;
+    }
+
+    public void displayInvoice(Invoice invoice){
+        System.out.println("*** Invoice ***");
+        System.out.println("Invoice date: " + invoice.getDate());
+        System.out.println("Bill to: ");
+        displayCustomer(invoice.getCustomer());
+        System.out.println("Items: ");
+        displayProductList(invoice.getProducts());
+        System.out.println("Total: " + invoice.getCost());
+        System.out.println("*** Invoice ***");
+
+    }
+
+    private void displayCustomer(Customer customer){
+        System.out.println("    Name: " + customer.getName());
+        System.out.println("    Id: " + customer.getId());
+        System.out.println("    Email: " + customer.getEmail());
+        System.out.println("    Address: " + customer.getAddress());
+        System.out.println("    Tax number: " + customer.getTax_number());
+    }
+
+
+    private void displayProductList(List<Product> products){
+
+        for(Product product : products){
+            System.out.println(product.getName());
+        }
     }
 }
